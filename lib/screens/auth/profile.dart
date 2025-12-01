@@ -154,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                         },
-                        child: menuList("Tugas", "assets/images/tugas.png"),
+                        child: menuList("List Item", "assets/images/tugas.png"),
                       ),
                       SizedBox(height: 10),
                       menuList("Peringkat", "assets/images/peringkat.png"),
