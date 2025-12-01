@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "225911672456",
+    "project_id": "prak-mobile-24f8a",
+    "storage_bucket": "prak-mobile-24f8a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225911672456:android:128876db3359eea8e3193d",
+        "android_client_info": {
+          "package_name": "com.example.myapp_first"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225911672456-k0al19ebkr7ckhhvsve10tjgitof8u8c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapp_first",
+            "certificate_hash": "53d7894bda96ea538196df3e5794bfcc9114fe4c"
+          }
+        },
+        {
+          "client_id": "225911672456-k3vu2mi7m1vat9t90h5s8ch2hgvtdocs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj-r2yksjBAmE0tl_7GRh_xbpb0Spdy7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225911672456-k3vu2mi7m1vat9t90h5s8ch2hgvtdocs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "225911672456-2bovl9gr7fubrk0jcvqlr16t6uoc2oec.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myappFirst"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
