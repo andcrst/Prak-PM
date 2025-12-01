@@ -143,79 +143,40 @@ class ProfileScreen extends StatelessWidget {
                       ),
 
                       SizedBox(height: 25),
-
-                      menuList(
-                        title: "History",
-                        image: "assets/images/history.png",
-                      ),
+                      menuList("History", "assets/images/history.png"),
                       SizedBox(height: 10),
-
-                      menuList(
-                        title: "Item List",
-                        image: "assets/images/tugas.png",
-                        onTap: () {
+                      InkWell(
+                        onTap: () => {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ItemListScreen(),
+                              builder: (context) => ItemListScreen(),
                             ),
-                          );
+                          ),
                         },
+                        child: menuList("Tugas", "assets/images/tugas.png"),
                       ),
                       SizedBox(height: 10),
-
-                      menuList(
-                        title: "Tugas",
-                        image: "assets/images/tugas.png",
-                      ),
-
+                      menuList("Peringkat", "assets/images/peringkat.png"),
                       SizedBox(height: 10),
-
+                      menuList("Notifikasi", "assets/images/notifikasi.png"),
+                      SizedBox(height: 10),
                       menuList(
-                        title: "Peringkat",
-                        image: "assets/images/peringkat.png",
+                        "Kebijakan Privasi",
+                        "assets/images/privasi.png",
                       ),
                       SizedBox(height: 10),
-
-                      menuList(
-                        title: "Notifikasi",
-                        image: "assets/images/notifikasi.png",
-                      ),
+                      menuList("Medaliku", "assets/images/medali.png"),
                       SizedBox(height: 10),
-
-                      menuList(
-                        title: "Kebijakan Privasi",
-                        image: "assets/images/privasi.png",
-                      ),
+                      menuList("Ganti Password", "assets/images/password.png"),
                       SizedBox(height: 10),
-
-                      menuList(
-                        title: "Medaliku",
-                        image: "assets/images/medali.png",
-                      ),
+                      menuList("Pusat Bantuan", "assets/images/bantuan.png"),
                       SizedBox(height: 10),
-
-                      menuList(
-                        title: "Ganti Password",
-                        image: "assets/images/password.png",
-                      ),
-                      SizedBox(height: 10),
-
-                      menuList(
-                        title: "Pusat Bantuan",
-                        image: "assets/images/bantuan.png",
+                      InkWell(
+                        onTap: () async => await AuthService().signOut(),
+                        child: menuList("Logout", "assets/images/bantuan.png"),
                       ),
 
-                      SizedBox(height: 10),
-
-                      menuList(
-                        title: "Logout",
-                        image: "assets/images/privasi.png",
-                        onTap: () async {
-                          await AuthService().signOut();
-                          Navigator.pushReplacementNamed(context, "/login");
-                        },
-                      ),
                       SizedBox(height: 10),
                     ],
                   ),
