@@ -17,34 +17,37 @@ class _ItemListScreenState extends State<ItemListScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _pointController = TextEditingController();
 
-
   // ====================================================================
   // LOGIKA CREATE (Menambah Data)
   // ====================================================================
-  void _showDialog() {
-    // PENTING: Reset/Bersihkan isi form setiap kali dialog dibuka.
-    // Jika tidak di-clear, tulisan lama akan tetap muncul saat user membuka dialog lagi.
-    _nameController.clear();
-    _pointController.clear();
+  void _showDialog({Item? item}) {
+    if (item == null) {
+      // PENTING: Reset/Bersihkan isi form setiap kali dialog dibuka.
+      // Jika tidak di-clear, tulisan lama akan tetap muncul saat user membuka dialog lagi.
+      _nameController.clear();
+      _pointController.clear();
+    } else {
+      _nameController.text = item.name;
+      _pointController.text = item.point.toString();
+    }
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Tambah Data'),
         content: Column(
-          mainAxisSize: MainAxisSize.min, // Agar dialog tidak memanjang ke bawah
+          mainAxisSize:
+              MainAxisSize.min, // Agar dialog tidak memanjang ke bawah
           children: [
             TextField(
-              controller: _nameController, // Hubungkan TextField dengan controller
-              decoration: InputDecoration(
-                labelText: 'Nama Item'
-              ),
+              controller:
+                  _nameController, // Hubungkan TextField dengan controller
+              decoration: InputDecoration(labelText: 'Nama Item'),
             ),
             TextField(
-              controller: _pointController, // Hubungkan TextField dengan controller
-              decoration: InputDecoration(
-                labelText: 'Poin Item'
-              ),
+              controller:
+                  _pointController, // Hubungkan TextField dengan controller
+              decoration: InputDecoration(labelText: 'Poin Item'),
               keyboardType: TextInputType.number, // Keyboard angka
             ),
           ],
@@ -66,16 +69,46 @@ class _ItemListScreenState extends State<ItemListScreen> {
               // 3. Validasi sederhana: Nama tidak boleh kosong
               if (name.isNotEmpty) {
                 // Panggil fungsi CREATE dari Service
-                _firestoreService.addItem(name, point);
+                if (item == null) {
+                  _firestoreService.addItem(name, point);
+                } else {
+                  _firestoreService.updateItem(item.id, name, point);
+                }
 
                 // Tutup dialog setelah simpan
                 Navigator.pop(context);
               }
             },
-            child: Text("Simpan"),
-          )
+            child: Text(item == null ? "Tambah" : "Update"),
+          ),
         ],
-      )
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(String id, String name) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Hapus Item ?"),
+        content: Text(
+          "Apakah anda yakin Menghapus item '$name'?. Data tidak dapat dikembalikan",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Batal"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _firestoreService.deleteItem(id);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text("Hapus", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -101,11 +134,11 @@ class _ItemListScreenState extends State<ItemListScreen> {
         foregroundColor: Colors.white,
       ),
 
-        // Tombol Tambah (+) memanggil fungsi _showDialog
+      // Tombol Tambah (+) memanggil fungsi _showDialog
       floatingActionButton: FloatingActionButton(
         onPressed: _showDialog,
         backgroundColor: Colors.green,
-        child: Icon(Icons.add, color: Colors.white,),
+        child: Icon(Icons.add, color: Colors.white),
       ),
 
       // StreamBuilder: Jantung dari fitur Real-time
@@ -115,16 +148,12 @@ class _ItemListScreenState extends State<ItemListScreen> {
         builder: (context, snapshot) {
           // Kondisi 1: Sedang memuat data (Waiting)
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator()
-            );
+            return Center(child: CircularProgressIndicator());
           }
 
           // Kondisi 2: Terjadi Error saat mengambil data
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Terjadi kesalahan: ${snapshot.error}')
-            );
+            return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
           }
 
           // Ambil data List<Item> dari snapshot
@@ -133,12 +162,12 @@ class _ItemListScreenState extends State<ItemListScreen> {
           // Kondisi 3: Data berhasil diambil tapi kosong
           if (items.isEmpty) {
             return Center(
-              child: Text('Tidak ada item yang dapat ditampilkan!')
+              child: Text('Tidak ada item yang dapat ditampilkan!'),
             );
           }
 
           // Kondisi 4: Data ada, tampilkan menggunakan ListView
-          return  ListView.builder(
+          return ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) {
               final Item item = items[index];
@@ -149,27 +178,34 @@ class _ItemListScreenState extends State<ItemListScreen> {
                 child: ListTile(
                   title: Text(
                     item.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    )
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text(
-                    item.id
+                  subtitle: Text(item.id),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${item.point} Poin',
+                        style: TextStyle(
+                          color: Colors.green[700],
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () =>
+                            _showDeleteConfirmation(item.id, item.name),
+                        icon: Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ],
                   ),
-                  trailing: Text(
-                    '${item.point} Poin',
-                    style: TextStyle(
-                      color: Colors.green[700],
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600
-                    ),
-                  ),
+                  onTap: () => _showDialog(item: item),
                 ),
               );
             },
           );
         },
-      )
+      ),
     );
   }
 }

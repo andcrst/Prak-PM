@@ -63,4 +63,15 @@ class FirestoreService {
     // Firestore akan otomatis meng-generate Random ID yang unik.
     .add({'name': name, 'point': point});
   }
+
+  Future<void> updateItem(String id, String name, int point) {
+    return _db.collection("user_items").doc(id).update({
+      'name': name,
+      'point': point,
+    });
+  }
+
+  Future<void> deleteItem(String id) {
+    return _db.collection('user_items').doc(id).delete();
+  }
 }
